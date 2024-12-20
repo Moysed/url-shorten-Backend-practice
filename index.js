@@ -2,11 +2,11 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const mongoose = require('mongoose');
-const PORT = 3000;
+const PORT = process.env.PORT || 300;
 
-console.log('MongoDB URI:', process.env.MONGO_URI);
-
+app.use(cors());
 app.use(bodyParser.json());
 
 
@@ -31,7 +31,7 @@ app.post('/shorten', async (req, res) => {
     }
     const { nanoid } = await import('nanoid');
     const shortId = nanoid(8); 
-    const shortUrl = `http://localhost:${PORT}/${shortId}`;
+    const shortUrl = `https://url-shortener-mcxyab9et-moyseds-projects.vercel.app/${shortId}`;
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours()+24);
   try{
@@ -72,7 +72,7 @@ app.post('/shorten', async (req, res) => {
         const url = await URL.findOne({shortId});
         if(url){
             res.status(200).json({
-                shortUrl: `http://localhost:${PORT}/${shortId}`, clicks: url.clicks
+                shortUrl: `https://url-shortener-mcxyab9et-moyseds-projects.vercel.app/${shortId}`, clicks: url.clicks
               });
         } else {
             res.status(404).send('URL not found');
